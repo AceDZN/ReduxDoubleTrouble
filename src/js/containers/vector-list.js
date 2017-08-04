@@ -18,7 +18,7 @@ class VectorsList extends Component {
   }
   render(){
     return (
-      <ul className="list-group">
+      <ul className="list-group active_vectors_bar">
         {this.renderList()}
       </ul>
     )
