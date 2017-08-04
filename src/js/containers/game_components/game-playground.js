@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {generateCardVectors} from '../../actions/cards';
+import {generateCardVectors,updateScore} from '../../actions/cards';
 import {bindActionCreators} from 'redux';
 
 class GamePlayGround extends Component{
@@ -11,13 +11,21 @@ class GamePlayGround extends Component{
       items[i].style.top = (50 + 35*Math.sin(-0.5 * Math.PI - 2*(1/l)*i*Math.PI)).toFixed(4) + "%";
     }
   }
+
+  checkIfVectorWin(vector){
+    if(!vector) return;
+    this.props.updateScore(vector.title == this.props.cards.active_card.title ? 1 : 0);
+    if(vector.title == this.props.cards.active_card.title){
+      this.props.generateCardVectors(this.props.vectors);
+    }
+  }
+
   componentDidMount(){
     this.props.generateCardVectors(this.props.vectors);
-
   }
   componentDidUpdate(){
-    var items1 = document.querySelectorAll('.playground>div.col-md-6:first-child .card_border a');
-    var items2 = document.querySelectorAll('.playground>div.col-md-6:last-child .card_border a');
+    var items1 = document.querySelectorAll('.playground div.col-md-6:first-child .card_border a');
+    var items2 = document.querySelectorAll('.playground div.col-md-6:last-child .card_border a');
     this.setCircularVectors(items1);this.setCircularVectors(items2);
   }
 
@@ -27,6 +35,7 @@ class GamePlayGround extends Component{
       return (
         <a
           className=""
+          onClick={()=>this.checkIfVectorWin(vector)}
           key={vector.title+'_card'}>
           {vector.title}
         </a>
@@ -56,7 +65,8 @@ class GamePlayGround extends Component{
       <div className="playground row">
           <div className="col-md-6">
             <div className="card_wrap">
-              <div className="card_border"><div>
+              <div className="card_border">
+                <div>
                 {this.props.cards?this.renderCard(this.props.cards.card_1):false}
                 </div>
               </div>
@@ -73,9 +83,7 @@ class GamePlayGround extends Component{
 
       </div>
     )
-
   }
-
 }
 function mapStateToProps(state) {
   return {
@@ -86,6 +94,6 @@ function mapStateToProps(state) {
   }
 }
 function mapDispatchToProps(dispatch){
-  return bindActionCreators({generateCardVectors:generateCardVectors}, dispatch);
+  return bindActionCreators({updateScore:updateScore,generateCardVectors:generateCardVectors}, dispatch);
 }
 export default connect(mapStateToProps,mapDispatchToProps)(GamePlayGround);

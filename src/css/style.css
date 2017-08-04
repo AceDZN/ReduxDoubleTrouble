@@ -50,10 +50,10 @@ ul.list-group {
   left: 50%;
   transform: translate(-50%, -50%); }
 
-.playground > div.col-md-6:first-child {
+.playground div.col-md-6:first-child {
   background: #f0f0f0; }
 
-.playground > div.col-md-6 {
+.playground div.col-md-6 {
   padding: 50px;
   height: 100%; }
 
@@ -105,4 +105,28 @@ ul.list-group.active_vectors_bar {
 
 .card_border a {
   position: absolute;
+  font-size: 40px; }
+
+.card_border a:hover {
+  text-decoration: none; }
+
+.game_header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  max-width: 90%;
+  width: 1000px;
+  padding: 20px;
+  box-sizing: border-box;
+  z-index: 1;
+  background: white;
+  border-radius: 0 0 30px 0;
+  box-shadow: 0px 0px 63px -15px;
+  line-height: 60px;
+  font-weight: 100; }
+
+.game_header h2 {
+  margin: 0;
+  font-weight: 100;
+  line-height: 60px;
   font-size: 60px; }

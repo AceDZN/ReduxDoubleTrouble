@@ -4,3 +4,10 @@ export function generateCardVectors(vectors){
     payload: vectors
   }
 }
+
+export function updateScore(score){
+  return {
+    type: (score==1?'INCREASE_SCORE':'DECREASE_SCORE'),
+    payload: score
+  }
+}

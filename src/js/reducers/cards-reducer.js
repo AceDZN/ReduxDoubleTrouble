@@ -37,7 +37,7 @@ function generateVector(vectors,arr){
   }
 };
 
-function generateCards(vectors, count = 5){
+function generateCards(vectors, count = 8){
   var p1 = {vectors:[]}; var p2 = {vectors:[]}; var same;
   card1 = generateVectors(vectors,(count-1));
   card2 = generateVectors(vectors,(count-1));
