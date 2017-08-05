@@ -142,7 +142,18 @@ ul.list-group.active_vectors_bar{
 .card_border a {
     position: absolute;
     font-size: 40px;
+    left: 50%; top: 15%;
 }
+.card_border a:nth-child(1){left: 50%; top: 15%;}
+.card_border a:nth-child(2){left: 74.7487%; top: 25.2513%;}
+.card_border a:nth-child(3){left: 85%; top: 50%;}
+.card_border a:nth-child(4){left: 74.7487%; top: 74.7487%;}
+.card_border a:nth-child(5){left: 50%; top: 85%;}
+.card_border a:nth-child(6){left: 25.2513%; top: 74.7487%;}
+.card_border a:nth-child(7){left: 15%; top: 50%;}
+.card_border a:nth-child(8){left: 25.2513%; top: 25.2513%;}
+.card_border a:nth-child(9){left: 25.2513%; top: 25.2513%;}
+
 .card_border a:hover{
     text-decoration: none;}
 

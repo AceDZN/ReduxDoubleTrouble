@@ -10,21 +10,18 @@ class GamePlayGround extends Component{
         if(!items || items.length<1 )return;
 
         var itm = items[0];
-
-
-            if(itm.parentElement && itm.parentElement.parentElement){
-                if(itm.parentElement.parentElement.classList.contains("card_border")){
-                    itm.parentElement.parentElement.classList.add("rotating");
-                }
+        if(itm.parentElement && itm.parentElement.parentElement){
+            if(itm.parentElement.parentElement.classList.contains("card_border")){
+                itm.parentElement.parentElement.classList.add("rotating");
             }
-            this.props.selectVector(this.props.cards.active_card);
-
-
+        }
+        this.props.selectVector(this.props.cards.active_card);
+        /*
         for(var i = 0, l = items.length; i < l; i++) {
             items[i].style.left = (50 - 35*Math.cos(-0.5 * Math.PI - 2*(1/l)*i*Math.PI)).toFixed(4) + "%";
             items[i].style.top = (50 + 35*Math.sin(-0.5 * Math.PI - 2*(1/l)*i*Math.PI)).toFixed(4) + "%";
         }
-
+*/
         setTimeout(function () {
             itm.parentElement.parentElement.classList.remove("rotating");
         }, 150);
@@ -57,10 +54,13 @@ class GamePlayGround extends Component{
     this.props.generateCardVectors(this.props.vectors);
   }
   componentDidUpdate(){
+    if(!this.props.cards.active_card ) return
+    console.log(this.props.activeVector,"this.props.activeVector");
+    console.log(this.props.cards.active_card.title,"this.props.cards.active_card.title");
     if (!this.props.activeVector || this.props.cards.active_card.title !== this.props.activeVector.title){
         var items1 = document.querySelectorAll('.playground div.half-screen:first-child .card_border a');
         var items2 = document.querySelectorAll('.playground div.half-screen:last-child .card_border a');
-
+        console.log(items1.length,"items1.length");console.log(items2.length,"items2.length");
         if(items1.length<1 || items2.length<1) return;
         this.setCircularVectors(items1);this.setCircularVectors(items2);
     }
