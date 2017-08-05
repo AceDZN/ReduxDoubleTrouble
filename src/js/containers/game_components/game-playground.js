@@ -1,22 +1,55 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {generateCardVectors,updateScore} from '../../actions/cards';
+import {generateCardVectors,updateScore} from '../../actions/game';
+import {selectVector} from '../../actions/index';
 import {bindActionCreators} from 'redux';
 
 class GamePlayGround extends Component{
 
-  setCircularVectors(items){
-    for(var i = 0, l = items.length; i < l; i++) {
-      items[i].style.left = (50 - 35*Math.cos(-0.5 * Math.PI - 2*(1/l)*i*Math.PI)).toFixed(4) + "%";
-      items[i].style.top = (50 + 35*Math.sin(-0.5 * Math.PI - 2*(1/l)*i*Math.PI)).toFixed(4) + "%";
-    }
-  }
+    setCircularVectors(items){
+        if(!items || items.length<1 )return;
 
-  checkIfVectorWin(vector){
+        var itm = items[0];
+
+
+            if(itm.parentElement && itm.parentElement.parentElement){
+                if(itm.parentElement.parentElement.classList.contains("card_border")){
+                    itm.parentElement.parentElement.classList.add("rotating");
+                }
+            }
+            this.props.selectVector(this.props.cards.active_card);
+
+
+        for(var i = 0, l = items.length; i < l; i++) {
+            items[i].style.left = (50 - 35*Math.cos(-0.5 * Math.PI - 2*(1/l)*i*Math.PI)).toFixed(4) + "%";
+            items[i].style.top = (50 + 35*Math.sin(-0.5 * Math.PI - 2*(1/l)*i*Math.PI)).toFixed(4) + "%";
+        }
+
+        setTimeout(function () {
+            itm.parentElement.parentElement.classList.remove("rotating");
+        }, 150);
+
+    }
+
+  checkIfVectorWin(e,vector){
     if(!vector) return;
     this.props.updateScore(vector.title == this.props.cards.active_card.title ? 1 : 0);
     if(vector.title == this.props.cards.active_card.title){
-      this.props.generateCardVectors(this.props.vectors);
+        this.props.selectVector(vector);
+        this.props.generateCardVectors(this.props.vectors);
+    } else {
+        if(e.target && e.target.parentElement){
+            var el = e.target.parentElement.parentElement;
+            if(!!el && el.classList.contains('card_border')){
+                el.classList.add('flash-red');
+                setTimeout(function () {
+                    el.classList.remove('flash-red');
+                }, 1000);
+                console.log(e.target.parentElement.parentElement);
+            }
+
+        }
+        console.log(e.target);
     }
   }
 
@@ -24,9 +57,13 @@ class GamePlayGround extends Component{
     this.props.generateCardVectors(this.props.vectors);
   }
   componentDidUpdate(){
-    var items1 = document.querySelectorAll('.playground div.col-md-6:first-child .card_border a');
-    var items2 = document.querySelectorAll('.playground div.col-md-6:last-child .card_border a');
-    this.setCircularVectors(items1);this.setCircularVectors(items2);
+    if (!this.props.activeVector || this.props.cards.active_card.title !== this.props.activeVector.title){
+        var items1 = document.querySelectorAll('.playground div.half-screen:first-child .card_border a');
+        var items2 = document.querySelectorAll('.playground div.half-screen:last-child .card_border a');
+
+        if(items1.length<1 || items2.length<1) return;
+        this.setCircularVectors(items1);this.setCircularVectors(items2);
+    }
   }
 
   renderCard(data){
@@ -35,14 +72,15 @@ class GamePlayGround extends Component{
       return (
         <a
           className=""
-          onClick={()=>this.checkIfVectorWin(vector)}
-          key={vector.title+'_card'}>
+          onClick={(e)=>this.checkIfVectorWin(e,vector)}
+          key={vector.title+'_card_'+data.vectors[2].title}>
           {vector.title}
         </a>
       )
     })
   }
   render(){
+      if(this.props.game_status !== 'PLAYING'){return <div></div>}
     var card1 = "no vectors in card1";
     var card2 = "no vectors in card2";
     var active_card = 'no active card';
@@ -62,21 +100,22 @@ class GamePlayGround extends Component{
     }
 
     return (
-      <div className="playground row">
-          <div className="col-md-6">
+      <div className={"playground row "+(this.props.game_status == 'PLAYING' ? 'shown' : 'hidden')}>
+          <div className="col-xs-6 half-screen">
             <div className="card_wrap">
               <div className="card_border">
                 <div>
-                {this.props.cards?this.renderCard(this.props.cards.card_1):false}
+                    {this.props.cards?this.renderCard(this.props.cards.card_1):false}
                 </div>
               </div>
             </div>
           </div>
-          <div className="col-md-6">
+          <div className="col-xs-6 half-screen">
             <div className="card_wrap">
-              <div className="card_border"><div>
-                {this.props.cards?this.renderCard(this.props.cards.card_2):false}
-                </div>
+              <div className="card_border">
+                  <div>
+                      {this.props.cards?this.renderCard(this.props.cards.card_2):false}
+                  </div>
               </div>
             </div>
           </div>
@@ -94,6 +133,6 @@ function mapStateToProps(state) {
   }
 }
 function mapDispatchToProps(dispatch){
-  return bindActionCreators({updateScore:updateScore,generateCardVectors:generateCardVectors}, dispatch);
+  return bindActionCreators({updateScore:updateScore,generateCardVectors:generateCardVectors,selectVector:selectVector}, dispatch);
 }
 export default connect(mapStateToProps,mapDispatchToProps)(GamePlayGround);

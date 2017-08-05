@@ -1,21 +1,21 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {generateCardVectors} from '../../actions/cards';
+import {generateCardVectors} from '../../actions/game';
 import {bindActionCreators} from 'redux';
 
 class GameHeader extends Component{
   render(){
     return (
-      <div className="game_header row">
-          <div className="col-sm-4">
+      <div className={"game_header row "+(this.props.game_status == 'PLAYING' ? 'shown' : 'hidden')}>
+          <div className="col-sm-3">
             <button
               className="btn btn-primary"
               onClick={()=>this.props.generateCardVectors(this.props.vectors)}>
               Flip Cards
             </button>
           </div>
-          <div className="col-sm-4">
-            <h2>{this.props.currentScore}</h2>
+          <div className="col-sm-9 text-center">
+            <h2>{this.props.activeVector ? this.props.activeVector.title : ''} /{this.props.currentScore}</h2>
           </div>
       </div>
     )
